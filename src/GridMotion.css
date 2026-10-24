@@ -1,0 +1,118 @@
+.grid-motion {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  perspective: 950px;
+  background: #101a18;
+}
+
+.grid-motion-plane {
+  position: absolute;
+  inset: -26% -12%;
+  transform: rotate(var(--grid-angle)) rotateX(var(--grid-tilt)) scale(1.12);
+  transform-origin: center;
+}
+
+.grid-motion-columns {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--grid-gap);
+  height: 150%;
+  transform: translate3d(var(--parallax-x, 0px), var(--parallax-y, 0px), 0);
+  transition: transform .2s ease-out;
+}
+
+.grid-motion-column {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.grid-motion-track {
+  display: flex;
+  flex-direction: column;
+  gap: var(--grid-gap);
+  animation: grid-motion-up var(--grid-speed) linear infinite;
+  will-change: transform;
+}
+
+.grid-motion-column.is-reversed .grid-motion-track {
+  animation-name: grid-motion-down;
+}
+
+.grid-motion-tile {
+  position: relative;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: hidden;
+  aspect-ratio: var(--tile-ratio);
+  border: 1px solid rgba(228, 245, 221, .17);
+  border-radius: var(--tile-radius);
+  color: #ecf5e8;
+  background: linear-gradient(145deg, #264c3c, #19342f);
+  filter: var(--grid-filter);
+}
+
+.grid-motion-tile.is-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.grid-motion-tile.is-copy span {
+  padding: 14px;
+  color: #d8e9cf;
+  font: 500 clamp(10px, 1.15vw, 15px)/1.4 'DM Mono', monospace;
+  letter-spacing: .08em;
+  text-align: center;
+}
+
+.grid-motion-dim,
+.grid-motion-spotlight,
+.grid-motion-fade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+}
+
+.grid-motion-dim {
+  background: rgba(7, 16, 14, var(--grid-dim));
+}
+
+.grid-motion-spotlight {
+  background: radial-gradient(circle at var(--spot-x, 50%) var(--spot-y, 50%), rgba(214, 250, 152, calc(var(--grid-spotlight) * .15)), transparent 43%);
+  mix-blend-mode: screen;
+  transition: background .15s ease-out;
+}
+
+.grid-motion-fade {
+  background: linear-gradient(90deg, #111b19 0%, rgba(17, 27, 25, .92) 13%, rgba(17, 27, 25, .48) 55%, rgba(17, 27, 25, .25) 100%),
+    linear-gradient(0deg, rgba(17, 27, 25, .72), transparent 31%, transparent 74%, rgba(17, 27, 25, .4));
+  mask-image: linear-gradient(90deg, #000 0%, #000 calc(100% - var(--grid-fade)), transparent 100%);
+}
+
+@keyframes grid-motion-up {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+
+@keyframes grid-motion-down {
+  from { transform: translateY(-50%); }
+  to { transform: translateY(0); }
+}
+
+@media (max-width: 680px) {
+  .grid-motion-plane { inset: -20% -58%; transform: rotate(calc(var(--grid-angle) * .65)) scale(1.15); }
+  .grid-motion-columns { grid-template-columns: repeat(4, minmax(95px, 1fr)); gap: calc(var(--grid-gap) * .7); }
+  .grid-motion-fade {
+    background: linear-gradient(90deg, rgba(17, 27, 25, .97), rgba(17, 27, 25, .79) 40%, rgba(17, 27, 25, .48)),
+      linear-gradient(0deg, rgba(17, 27, 25, .5), transparent 50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid-motion-track { animation: none; }
+}
